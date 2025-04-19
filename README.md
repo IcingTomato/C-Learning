@@ -5,7 +5,7 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc.exe 构建和调试活动文件",
+            "label": "C/C++: gcc.exe build & debug active file",
             "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
             "args": [
                 "-fdiagnostics-color=always",

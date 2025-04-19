@@ -7,6 +7,9 @@ int main(void)
     puts("Enter two integers: ");
     scanf("%d %d", &a, &b);
 
+    printf("The first integer is %d\n", a);
+    printf("The second integer is %d\n", b);
+
     printf("The sum is %d\n", a + b);
     printf("The difference is %d\n", a - b);
     printf("The product is %d\n", a * b);
