@@ -4,7 +4,7 @@ int main(void)
 {
     int a = 10, b;
 
-    printf("Input: a is %d, b is %d\n", a, b);
+    printf("Enter: a is %d, b is %d\n", a, b);
 
 	__asm__("movl %1, %%eax\n\t"
 		"movl %%eax, %0\n\t"
