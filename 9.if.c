@@ -7,7 +7,7 @@ int main(void)
     printf("Enter an integer:"); scanf("%d", &no);
 
     if (no % 5)
-        puts("The number cannot not be devided by 5.");
+        puts("The number cannot be devided by 5.");
 
     return 0;
 }
