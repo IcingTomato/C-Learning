@@ -10,7 +10,6 @@
 #include <limits.h>
 #include <float.h>
 #include <assert.h>
-#include <error.h>
 #include <errno.h>
 #include <stddef.h>
 #include <signal.h>
