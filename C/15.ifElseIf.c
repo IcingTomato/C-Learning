@@ -2,7 +2,7 @@
 
 int main(void)
 {
-	int month;					/* 月 */
+	int month;
 
 	printf("Enter month: ");
 	scanf("%d", &month);
