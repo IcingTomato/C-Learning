@@ -4,11 +4,16 @@ param
     [string]$gitcommit = $null
 )
 
+# Perform git pull to update the repository
+Write-Host "Pulling latest changes from the repository..."
+git pull
+Write-Host " "
+
 # Get the directory where the current script is located
 $CurrentDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
-# Get all .exe files in the same directory
-$ExeFiles = Get-ChildItem -Path $CurrentDirectory -Filter *.exe
+# Get all .exe files in the directory and its subdirectories
+$ExeFiles = Get-ChildItem -Path $CurrentDirectory -Filter *.exe -Recurse
 
 if ($ExeFiles.Count -eq 0) {
     Write-Host "No .exe files found."
@@ -20,7 +25,6 @@ if ($ExeFiles.Count -eq 0) {
 
     # Delete all found .exe files
     $ExeFiles | Remove-Item -Force
-
 
     Write-Host " "
     Write-Host "Cleanup completed!"
