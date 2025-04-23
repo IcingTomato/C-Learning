@@ -14,9 +14,9 @@ int main(void)
             puts("Odd.");
         else
             puts("Even.");
-        printf("Retry? [yes/no] :"); scanf("%3s", retry);
+        printf("Retry? [y(es)/n(o)] :"); scanf("%3s", retry);
     }
-    while (strcmp(retry, "yes") == 0);
+    while (strcmp(retry, "no") != 0 && strcmp(retry, "n") != 0);
 
     return 0;
 }
