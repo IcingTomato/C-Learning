@@ -2,7 +2,7 @@
 
 int main(void)
 {
-    char retry[4];
+    char retry[100];
     int people, machine;
 
     do
@@ -10,11 +10,11 @@ int main(void)
         srand((unsigned)time(NULL));
         machine = rand() % 3 + 1;
 
-        printf("Enter your choise (1[Scissor], 2[Stone], 3[Paper]): "); scanf("%d", &people);
-
-        while (people < 1 || people > 3)
+        printf("Enter your choice (1[Scissor], 2[Stone], 3[Paper]): ");
+        while (scanf("%d", &people) != 1 || people < 1 || people > 3) 
         {
-            printf("Please re-enter your choise (1[Scissor], 2[Stone], 3[Paper]): "); scanf("%d", &people);
+            while (getchar() != '\n');
+            printf("Invalid input. Please re-enter your choice (1[Scissor], 2[Stone], 3[Paper]): ");
         }
         
         printf("You choose: ");
@@ -42,8 +42,14 @@ int main(void)
             case  2 : puts("Machine win!"); break;
             default : puts("People win!");  break;
         }
-        printf("Retry? [y(es)/n(o)] :"); scanf("%3s", retry);
+        
+        printf("Retry? [y(es)/n(o)] :"); scanf("%100s", retry);
+        
+        while (strcmp(retry, "yes") != 0 && strcmp(retry, "y") != 0 && strcmp(retry, "no") != 0 && strcmp(retry, "n") != 0) 
+        {
+            printf("Invalid input. Please enter [y(es)/n(o)] :");
+            scanf("%100s", retry);
+        }
     } while (strcmp(retry, "no") != 0 && strcmp(retry, "n") != 0);
-
     return 0;
 }
