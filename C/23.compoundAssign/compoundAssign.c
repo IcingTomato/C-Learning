@@ -18,6 +18,8 @@ int main(void)
     } while (retry == 0);
 
     printf("Sum is %d, average is %.2f.\n", sum, (double)sum / cnt);
+
+    printf("Press any key to continue.\n"); getchar();
     
     return 0;
 }
