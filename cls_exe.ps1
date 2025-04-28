@@ -40,17 +40,19 @@ if (-not $gitStatus) {
     $filesOutput = ""
 } else {
     # Parsing filenames and removing status flags
-    $FileNames = $gitStatus | ForEach-Object {
-        $_ -replace '^\s*[A-Z?]+\s+', '' # Remove preceding status flags and spaces
+    $FileNames = @()
+    $gitStatus | ForEach-Object {
+        $line = $_ -replace '^\s*[A-Z?]+\s+', '' # Remove preceding status flags and spaces
+        $FileNames += $line
     }
 
-    # If there are more than two files, show only the first two and add “etc.”
+    # If there are more than two files, show only the first two and add "etc."
     if ($FileNames.Count -gt 2) {
         $filesOutput = ($FileNames[0..1] -join ", ") + ", etc."
     } else {
         $filesOutput = ($FileNames -join ", ")
     }
-    # Write-Host $filesOutput
+    Write-Host "Changed files: $filesOutput"
 }
 
 # 如果没有传递 -gitcommit 参数，则使用默认值
@@ -58,12 +60,14 @@ if (-not $gitcommit) {
     $gitcommit = "Change: Changed $filesOutput"
 }
 
-# Write-Host $gitcommit
+# 确保 commit 消息正确加引号
+$gitcommitQuoted = "`"$gitcommit`""
 
 # Stage all changes, commit, and push to Git
 Write-Host " "
 git add .
 Write-Host " "
-git commit -m $gitcommit
+Write-Host "Committing with message: $gitcommit"
+git commit -m $gitcommitQuoted
 Write-Host " "
 git push
