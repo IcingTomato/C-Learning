@@ -42,10 +42,21 @@ if (-not $gitStatus) {
     # Parsing filenames and removing status flags
     $FileNames = @()
     $gitStatus | ForEach-Object {
-        $line = $_ -replace '^\s*[A-Z?]+\s+', '' # Remove preceding status flags and spaces
-        $FileNames += $line
+        # 正则表达式改进，更精确地匹配状态码和文件名
+        $line = $_ -replace '^[\s]*[\?AM]+[\s]+', ''
+        
+        # 跳过空行
+        if ($line.Trim() -ne "") {
+            $FileNames += $line
+        }
     }
 
+    # 输出调试信息
+    Write-Host "Raw git status output:" -ForegroundColor Cyan
+    $gitStatus | ForEach-Object { Write-Host $_ }
+    Write-Host "Parsed file names:" -ForegroundColor Cyan 
+    $FileNames | ForEach-Object { Write-Host $_ }
+    
     # If there are more than two files, show only the first two and add "etc."
     if ($FileNames.Count -gt 2) {
         $filesOutput = ($FileNames[0..1] -join ", ") + ", etc."
