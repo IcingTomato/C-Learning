@@ -44,34 +44,33 @@ if (-not $modifiedFiles) {
     Write-Host " "
     $filesOutput = ""
 } else {
-    # 转换为数组以确保正确处理单个文件的情况
+    # Convert to array to ensure correct handling of single file cases
     $FileNames = @($modifiedFiles)
     
-    # 确保所有元素都被当作数组处理
+    # Ensure all elements are treated as array
     Write-Host "Debug - Number of changed files:" $FileNames.Count
     $FileNames | ForEach-Object { Write-Host "File: $_" }
     
-    # If there are more than two files, show only the first two and add "etc."
+    # Format files list differently to ensure proper separation
     if ($FileNames.Count -gt 2) {
-        $filesOutput = "$($FileNames[0]), $($FileNames[1]), etc."
+        $filesOutput = "{0}, {1}, etc." -f $FileNames[0], $FileNames[1]
+    } elseif ($FileNames.Count -eq 2) {
+        $filesOutput = "{0}, {1}" -f $FileNames[0], $FileNames[1]
     } else {
-        # 使用字符串拼接方式构建输出，确保正确应用分隔符
-        if ($FileNames.Count -eq 1) {
-            $filesOutput = $FileNames[0]
-        } else {
-            $filesOutput = "$($FileNames[0]), $($FileNames[1])"
-        }
+        $filesOutput = $FileNames[0]
     }
-    Write-Host "Changed files: $filesOutput"
+    
+    # Add debug output to see exact formatted string
+    Write-Host "Debug - Formatted output: [$filesOutput]"
 }
 
-# 如果没有传递 -gitcommit 参数，则使用默认值
+# If no -gitcommit parameter is passed, use default value
 if (-not $gitcommit) {
     $gitcommit = "Change: Changed $filesOutput"
 }
 
-# 确保 commit 消息正确加引号
-$gitcommitQuoted = "`"$gitcommit`""
+# Make sure commit message is correctly quoted
+$gitcommitQuoted = "`"$gitcommit`""  # Using double quotes instead of single quotes
 
 # Stage all changes, commit, and push to Git
 Write-Host " "

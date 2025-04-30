@@ -11,7 +11,7 @@ int main(void)
     //        MB_OK - 只显示一个"确定"按钮
     MessageBox(
         NULL,
-        "这是一个警告消息！\n请注意程序可能存在异常情况。",
+        "请立即关闭计算机！",
         "警告",
         MB_ICONWARNING | MB_OK
     );
