@@ -1,6 +1,7 @@
 #include "../shit.h"
 
-int main() {
+int main(void) 
+{
     // 弹出警告窗口
     // 参数1：父窗口句柄，NULL表示无父窗口
     // 参数2：窗口显示的消息内容
