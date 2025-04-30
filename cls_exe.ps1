@@ -30,32 +30,21 @@ if ($ExeFiles.Count -eq 0) {
     Write-Host "Cleanup completed!"
 }
 
-# Get git status
-$gitStatus = git status --porcelain
+# Get modified files using git diff instead of git status
+$modifiedFiles = git diff --name-only --cached
+$modifiedFiles += git diff --name-only
+$modifiedFiles += git ls-files --others --exclude-standard
 
-if (-not $gitStatus) {
+# Remove duplicates
+$modifiedFiles = $modifiedFiles | Select-Object -Unique
+
+if (-not $modifiedFiles) {
     Write-Host " "
     Write-Host "No uncommitted changes."
     Write-Host " "
     $filesOutput = ""
 } else {
-    # Parsing filenames and removing status flags
-    $FileNames = @()
-    $gitStatus | ForEach-Object {
-        # 正则表达式改进，更精确地匹配状态码和文件名
-        $line = $_ -replace '^[\s]*[\?AM]+[\s]+', ''
-        
-        # 跳过空行
-        if ($line.Trim() -ne "") {
-            $FileNames += $line
-        }
-    }
-
-    # 输出调试信息
-    Write-Host "Raw git status output:" -ForegroundColor Cyan
-    $gitStatus | ForEach-Object { Write-Host $_ }
-    Write-Host "Parsed file names:" -ForegroundColor Cyan 
-    $FileNames | ForEach-Object { Write-Host $_ }
+    $FileNames = $modifiedFiles
     
     # If there are more than two files, show only the first two and add "etc."
     if ($FileNames.Count -gt 2) {
