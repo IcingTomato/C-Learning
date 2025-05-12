@@ -16,9 +16,11 @@
 #include <setjmp.h>
 #include <locale.h>
 
+#if defined(WIN32)
 // Get process ID. In Unix-like use unistd.h
 #include <windows.h>
 #include <process.h>
+#endif
 
 #include <pthread.h>
 
