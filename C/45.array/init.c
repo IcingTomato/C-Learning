@@ -2,13 +2,13 @@
 
 int main(void)
 {
-	// int i;
-	// int v[5];
+	int i;
+	// int v[5] = {1, 2, 3, 4, 5, };
+	int v[] = {1, 2, 3, 4, 5, };
 
-	int i, v[5];
 
-	for (i = 0; i < 5; i++)
-		v[i] = i + 1;
+	// for (i = 0; i < 5; i++)
+	// 	v[i] = i + 1;
 
 	// 遍历 traverse
 
