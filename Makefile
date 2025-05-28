@@ -30,7 +30,6 @@ compile:
 	    exit 1; \
 	fi
 	@echo "编译文件: $(FILE)"
-	@mkdir -p $(dir $(FILE))/bin
 	@$(CC) $(CFLAGS) -o $(basename $(FILE)) $(FILE)
 	@echo "编译完成: $(basename $(FILE))"
 
