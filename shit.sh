@@ -10,29 +10,48 @@ echo " "
 
 # 获取当前脚本所在的目录
 CURRENT_DIRECTORY=$(dirname "$(realpath "$0")")
+echo "Working directory: $CURRENT_DIRECTORY"
 
-# 查找所有二进制可执行文件（ELF格式）
-echo "Searching for binary files..."
-# 找出所有文件并用file命令过滤出ELF二进制文件
-BINARY_FILES=$(find "$CURRENT_DIRECTORY" -type f -not -path "*/\.*" -exec file {} \; | grep "ELF" | cut -d':' -f1)
+# 查找所有可执行二进制文件的更可靠方法
+echo "Searching for binary executable files..."
 
-# 将结果转换为数组以便计数
-mapfile -t BINARY_FILES_ARRAY <<< "$BINARY_FILES"
+# 使用更详细的搜索方式找到可执行文件并过滤出二进制文件
+# 先找出所有可执行文件，然后用file命令检查，只保留ELF格式的文件
+find "$CURRENT_DIRECTORY" -type f -executable -not -path "*/\.*" > /tmp/exec_files.txt
+
+# 添加调试输出
+echo "Found executable files:"
+cat /tmp/exec_files.txt
+echo "-------------------------"
+
+# 初始化二进制文件列表
+> /tmp/binary_files.txt
+
+# 遍历所有可执行文件，过滤出二进制文件
+while IFS= read -r file; do
+    if file "$file" | grep -q "ELF"; then
+        echo "$file" >> /tmp/binary_files.txt
+    fi
+done < /tmp/exec_files.txt
+
+# 读取二进制文件列表到数组
+mapfile -t BINARY_FILES < /tmp/binary_files.txt
 
 # 检查是否找到二进制文件
-if [ ${#BINARY_FILES_ARRAY[@]} -eq 0 ]; then
+if [ ${#BINARY_FILES[@]} -eq 0 ]; then
     echo "No binary files found."
 else
     echo "The following binary files will be deleted:"
-    for binary in "${BINARY_FILES_ARRAY[@]}"; do
+    for binary in "${BINARY_FILES[@]}"; do
         if [ -n "$binary" ]; then
             echo "$binary"
         fi
     done
     
     # 删除所有找到的二进制文件
-    for binary in "${BINARY_FILES_ARRAY[@]}"; do
-        if [ -n "$binary" ]; then
+    for binary in "${BINARY_FILES[@]}"; do
+        if [ -n "$binary" ] && [ -f "$binary" ]; then
+            echo "Deleting: $binary"
             rm "$binary"
         fi
     done
@@ -40,6 +59,9 @@ else
     echo " "
     echo "Cleanup completed!"
 fi
+
+# 清理临时文件
+rm -f /tmp/exec_files.txt /tmp/binary_files.txt
 
 # 获取修改过的文件列表
 modified_files_staged=$(git diff --name-only --cached)
