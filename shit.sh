@@ -11,25 +11,31 @@ echo " "
 # 获取当前脚本所在的目录
 CURRENT_DIRECTORY=$(dirname "$(realpath "$0")")
 
-# 查找所有.exe文件
-EXE_FILES=$(find "$CURRENT_DIRECTORY" -name "*.exe" -type f)
+# 查找所有二进制可执行文件（ELF格式）
+echo "Searching for binary files..."
+# 找出所有文件并用file命令过滤出ELF二进制文件
+BINARY_FILES=$(find "$CURRENT_DIRECTORY" -type f -not -path "*/\.*" -exec file {} \; | grep "ELF" | cut -d':' -f1)
 
 # 将结果转换为数组以便计数
-mapfile -t EXE_FILES_ARRAY <<< "$EXE_FILES"
+mapfile -t BINARY_FILES_ARRAY <<< "$BINARY_FILES"
 
-# 检查是否找到.exe文件
-if [ ${#EXE_FILES_ARRAY[@]} -eq 0 ]; then
-    echo "No .exe files found."
+# 检查是否找到二进制文件
+if [ ${#BINARY_FILES_ARRAY[@]} -eq 0 ]; then
+    echo "No binary files found."
 else
-    echo "The following .exe files will be deleted:"
-    for exe in "${EXE_FILES_ARRAY[@]}"; do
-        if [ -n "$exe" ]; then
-            echo "$exe"
+    echo "The following binary files will be deleted:"
+    for binary in "${BINARY_FILES_ARRAY[@]}"; do
+        if [ -n "$binary" ]; then
+            echo "$binary"
         fi
     done
     
-    # 删除所有找到的.exe文件
-    find "$CURRENT_DIRECTORY" -name "*.exe" -type f -delete
+    # 删除所有找到的二进制文件
+    for binary in "${BINARY_FILES_ARRAY[@]}"; do
+        if [ -n "$binary" ]; then
+            rm "$binary"
+        fi
+    done
     
     echo " "
     echo "Cleanup completed!"
